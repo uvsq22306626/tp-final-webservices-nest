@@ -3,8 +3,14 @@ import { TasksService } from '../services/tasks.service';
 import type { Task } from '../task.interface';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
 
 @Controller('tasks')
+@ApiTags('tasks')
+@ApiBearerAuth('bearer')
+@Controller('tasks')
+
 export class TasksController {
     constructor(private readonly tasksService: TasksService) {}
 
@@ -44,7 +50,7 @@ export class TasksController {
     remove(@Param('id', ParseIntPipe) id: number): void {
         return this.tasksService.remove(id);
     }
-
+ 
 
 
 }
