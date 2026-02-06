@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { TasksService } from '../services/tasks.service';
 import type { Task } from '../task.interface';
+import { CreateTaskDto } from '../dto/create-task.dto';
+import { UpdateTaskDto } from '../dto/update-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -17,26 +19,24 @@ export class TasksController {
     }
     
      @Post()
-    create(
-        @Body()
-        body: { title: string; startedAt: string; isCompleted: boolean },
-    ): Task {
+    create(@Body() dto: CreateTaskDto,): Task {
         return this.tasksService.create({
-        title: body.title,
-        startedAt: new Date(body.startedAt),
-        isCompleted: body.isCompleted,
-        });
-    }
+            title: dto.title,
+            startedAt: new Date(dto.startedAt),
+            isCompleted: dto.isCompleted,
+        })
+            
+    };
     @Patch(':id')
     patch(
         @Param('id', ParseIntPipe) id: number,
-        @Body() body: Partial<{ title: string; startedAt: string; isCompleted: boolean }>,
+        @Body() dto: UpdateTaskDto,
     ): Task {
         return this.tasksService.patch(id, {
-        title: body.title,
-        startedAt: body.startedAt ? new Date(body.startedAt) : undefined,
-        isCompleted: body.isCompleted,
-        });
+            title: dto.title,
+            startedAt: dto.startedAt ? new Date(dto.startedAt) : undefined,
+            isCompleted: dto.isCompleted,
+    });
     }
 
      @Delete(':id')
